@@ -16,6 +16,7 @@ import asyncio
 
 
 class setup():
+
     PATH_ = 'C:\PATH\edgedriver_win64\msedgedriver.exe'  # Call path web-driver
     driver = webdriver.Edge(PATH_)
 
@@ -35,7 +36,7 @@ class getTime():
     # scText = [sc.text]          #Get sec from https://www.timeanddate.com/
 
 
-def runTime():
+async def runTime():
 
     # facebook
     dv = setup.driver
@@ -46,11 +47,20 @@ def runTime():
     waitLoad = WebDriverWait(dv, 20, poll_frequency=1, ignored_exceptions=[
         ElementNotVisibleException, ElementNotSelectableException])
 
-    link = setup.driver.find_element_by_link_text('เข้าสู่ระบบ').click()
+    setup.driver.find_element_by_link_text('เข้าสู่ระบบ').click()
     waitLoad.until(EC.element_to_be_clickable(
-        (By.ID, "username"))).send_keys("1679900365499")
+        (By.ID, "username"))).send_keys("1679900365499")   #Input your id card 
     waitLoad.until(EC.element_to_be_clickable(
-        (By.ID, "password"))).send_keys("1679900365499")
+        (By.ID, "password"))).send_keys("S.somphot!@#499")   #Input your password
+
+    await capture()
+    captcha = await ocr()
+
+    setup.driver.find_element_by_class_name('MuiInputBase-input MuiInput-input').send_key(captcha)
+    setup.driver.find_element_by_class_name('MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary').click()
+
+    setup.driver.find_element_by_link_text('หน้าหลัก').click()
+
 
     # waitLoad.until(EC.element_to_be_clickable((By.ID,"m_login_email"))).send_keys("Your Email")           #Input your email for login facebook
     # waitLoad.until(EC.element_to_be_clickable((By.ID,"m_login_password"))).send_keys("Your Pass")          #Input your passwork for login facebook
@@ -105,7 +115,7 @@ def ocr():
     img = Image.open(path_img)
     text = pytesseract.image_to_string(img)
     text_split = text.split()
-    print(text_split[0])
+    return (text_split[0])
 
 
 capture()
