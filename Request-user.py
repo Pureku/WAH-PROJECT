@@ -12,6 +12,7 @@ from pytesseract import pytesseract
 from PIL import Image
 from io import BytesIO
 import base64
+import asyncio
 
 
 class setup():
@@ -93,12 +94,20 @@ def capture():
     right = location['x'] + size['width']
     bottom = location['y'] + size['height']
 
-    img = img.crop((left, top, right, bottom)) # defines crop points
-    img.save('screenshot.png') # saves new cropped image
+    img = img.crop((left, top, right, bottom))  # defines crop points
+    img.save('image/myphoto.png', 'png')  # saves new cropped image
 
 
 def ocr():
-    print("tesseract")
+    path_pytes = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+    path_img = "image/myphoto.png"
+    pytesseract.tesseract_cmd = path_pytes
+    img = Image.open(path_img)
+    text = pytesseract.image_to_string(img)
+    text_split = text.split()
+    print(text_split[0])
+
 
 capture()
+ocr()
 # runTime()
